@@ -35,7 +35,7 @@ const MilestoneTracker: React.FC<MilestoneTrackerProps> = ({ currentPhase }) => 
   }));
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-soft h-full">
+    <div className="bg-white p-6 rounded-2xl shadow-soft">
       <h3 className="text-lg font-semibold text-neutral-700 mb-6">Your Journey Milestones</h3>
       <div className="relative flex items-center justify-between w-full">
         {/* Progress Line */}
