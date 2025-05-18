@@ -1,0 +1,2 @@
+// This file is intentionally left empty as its content was moved to OLD_OnboardingPage.tsx
+// It will be replaced by the new TypeformOnboardingPage.tsx logic or deleted if App.tsx points directly to OLD_OnboardingPage.tsx temporarily. 
