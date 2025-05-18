@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, UserCircle, Zap, TrendingUp } from 'lucide-react';
+import { Bell, UserCircle, Zap, TrendingUp, Menu } from 'lucide-react';
 
 // Example props, would come from user data
 interface TopbarProps {
@@ -8,6 +8,7 @@ interface TopbarProps {
   notificationsCount?: number;
   currentXP?: number;
   xpToNextLevel?: number;
+  onToggleMobileSidebar?: () => void;
 }
 
 const Topbar: React.FC<TopbarProps> = ({
@@ -15,6 +16,7 @@ const Topbar: React.FC<TopbarProps> = ({
   notificationsCount = 3,
   currentXP = 750,
   xpToNextLevel = 1000,
+  onToggleMobileSidebar
 }) => {
   const xpPercentage = (currentXP / xpToNextLevel) * 100;
 
@@ -23,6 +25,13 @@ const Topbar: React.FC<TopbarProps> = ({
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
+            <button 
+              onClick={onToggleMobileSidebar}
+              className="md:hidden mr-3 p-1 rounded-full text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent"
+              aria-label="Open sidebar"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
             <Zap className="h-7 w-7 text-accent" /> 
             <span className="ml-2 text-xl font-semibold text-neutral-800 hidden sm:inline">Advisor</span>
           </div>

@@ -9,6 +9,7 @@ import MilestoneTracker from '../components/dashboard/MilestoneTracker';
 import LLMAssistantPanel from '../components/llm/LLMAssistantPanel';
 import CategoryScores from '../components/dashboard/CategoryScores';
 import { UserStage } from '../config/typeformOnboardingQuestions';
+import { Menu } from 'lucide-react'; // For mobile menu toggle
 
 // Remove the placeholder for MilestoneTracker as it's now imported
 // const MilestoneTracker = () => <div className="bg-white p-6 rounded-2xl shadow-soft">Milestone Tracker (Placeholder)</div>;
@@ -18,16 +19,23 @@ const DashboardPage: React.FC = () => {
   const userPhase: BusinessPhase = "Growth"; 
   const [isAIAssistantOpen, setIsAIAssistantOpen] = useState(false);
   const [userStageData, setUserStageData] = useState<UserStage | null>(null);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false); // State for mobile sidebar
 
   useEffect(() => {
     const storedData = localStorage.getItem('userStageData_v2');
     if (storedData) {
       setUserStageData(JSON.parse(storedData));
     }
+    // Optional: Close mobile sidebar on route change if using a SPA router for internal nav
   }, []);
 
   const toggleAIAssistant = () => {
     setIsAIAssistantOpen(!isAIAssistantOpen);
+    if (isMobileSidebarOpen) setIsMobileSidebarOpen(false); // Close mobile sidebar if AI panel opens
+  };
+
+  const toggleMobileSidebar = () => {
+    setIsMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
   // Example data for LLM Panel context
@@ -37,20 +45,23 @@ const DashboardPage: React.FC = () => {
     <div className="flex h-screen bg-neutral-100 font-sans">
       <Sidebar 
         onToggleAIAssistant={toggleAIAssistant} 
-        isAIAssistantActive={isAIAssistantOpen} 
+        isAIAssistantActive={isAIAssistantOpen}
+        isMobileSidebarOpen={isMobileSidebarOpen}
       />
       <div className="flex-1 flex flex-col overflow-hidden">
-        <Topbar />
-        <main className={`flex-1 overflow-x-hidden overflow-y-auto bg-neutral-100 p-6 pt-20 md:pt-6 ml-64 transition-all duration-300 ease-in-out ${isAIAssistantOpen ? 'mr-0 md:mr-[calc(100vw-64px-20rem)] lg:mr-[calc(100vw-64px-24rem)]' : ''}`}>
-          {/* Adjust pt-6 if Topbar height changes, and ml-64 if Sidebar width changes */}
-          {/* The main content margin-right will be adjusted if the LLM panel pushes it. 
-              However, for a true slide-over that doesn't affect main content layout, 
-              the LLM panel would have a higher z-index and position fixed/absolute without pushing content.
-              The current LLMAssistantPanel is designed as an overlay (fixed position, high z-index), so it won't push content directly.
-              The margin adjustment here is more for a scenario where the panel *does* resize main content area, which is not the current LLM panel design.
-              Removing the margin adjustment from main as LLMAssistantPanel is an overlay.
-           */}
-        {/* <main className={`flex-1 overflow-x-hidden overflow-y-auto bg-neutral-100 p-6 pt-20 md:pt-6 ml-64`}> */}
+        <Topbar onToggleMobileSidebar={toggleMobileSidebar} />
+        <main 
+          className={`flex-1 overflow-x-hidden overflow-y-auto bg-neutral-100 p-6 md:pt-6 
+                      md:ml-64 
+                      transition-all duration-300 ease-in-out 
+                      pt-20 ${isMobileSidebarOpen ? 'blur-sm md:blur-none' : ''}`}>
+          {isMobileSidebarOpen && (
+            <div 
+              onClick={toggleMobileSidebar} 
+              className="fixed inset-0 bg-black/30 z-20 md:hidden"
+              aria-hidden="true"
+            ></div>
+          )}
           <div className="container mx-auto">
             <h1 className="text-3xl font-semibold text-neutral-800 mb-6">Dashboard</h1>
             

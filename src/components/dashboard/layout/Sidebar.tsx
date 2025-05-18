@@ -39,10 +39,15 @@ const NavItem: React.FC<NavItemProps> = ({ href, icon: Icon, label, isActive, on
 
 interface SidebarProps {
   onToggleAIAssistant: () => void;
-  isAIAssistantActive?: boolean; // To highlight the AI assistant nav item
+  isAIAssistantActive?: boolean;
+  isMobileSidebarOpen?: boolean;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ onToggleAIAssistant, isAIAssistantActive }) => {
+const Sidebar: React.FC<SidebarProps> = ({ 
+  onToggleAIAssistant, 
+  isAIAssistantActive,
+  isMobileSidebarOpen
+}) => {
   const currentPath = typeof window !== 'undefined' ? window.location.pathname : '/dashboard';
 
   const navItems = [
@@ -55,17 +60,25 @@ const Sidebar: React.FC<SidebarProps> = ({ onToggleAIAssistant, isAIAssistantAct
   ];
 
   return (
-    <aside className="w-64 bg-white shadow-soft h-screen fixed top-0 left-0 pt-16 flex flex-col z-30">
-      {/* Logo area within sidebar, visible when sidebar is not part of Topbar itself */}
-      {/* <div className="flex items-center justify-center h-16 border-b border-neutral-200">
-        <Zap className="h-8 w-8 text-accent" />
-        <span className="ml-2 text-xl font-semibold text-neutral-800">Advisor</span>
-      </div> */} 
-      {/* This is commented out because Topbar already has a logo. 
-          If Topbar and Sidebar were more separate in structure, this could be enabled. 
-      */}
+    <aside 
+      className={`
+        w-64 bg-white shadow-soft h-screen flex flex-col z-30 
+        transform transition-transform duration-300 ease-in-out
+        md:fixed md:left-0 md:top-0 md:pt-16 
+        ${isMobileSidebarOpen ? 'translate-x-0 fixed top-0 left-0 pt-4' : '-translate-x-full fixed top-0 left-0 pt-4'} 
+        md:translate-x-0
+      `}
+    >
+      {/* Optional: Close button for mobile sidebar */}
+      {/* <div className="md:hidden absolute top-2 right-2">
+        <button onClick={onToggleMobileSidebar} className="p-2 text-neutral-500"> X </button>
+      </div> */}
+      
+      {/* Logo area - adjust padding if mobile sidebar has different top padding */}
+      {/* <div className={`flex items-center justify-center h-16 border-b border-neutral-200 ${isMobileSidebarOpen ? 'pt-0' : 'md:pt-0'}`}>
+      </div> */}
 
-      <nav className="flex-grow px-4 py-6 space-y-1.5">
+      <nav className="flex-grow px-4 py-6 space-y-1.5 mt-12 md:mt-0">
         {navItems.map((item) => (
           <NavItem 
             key={item.id || item.href}
